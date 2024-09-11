@@ -26,24 +26,6 @@ function App() {
         });
     },
   });
-  const [nodes, setNodes] = useState([]);
-  function setNode() {
-    let newData = [];
-    data[0].data.map((el) => {
-      el.nodes.map((el1) => {
-        newData.push(el1);
-        el1.nodes.map((el2) => {
-          newData.push(el2);
-          el.nodes.map((el3) => {
-            newData.push(el3);
-          });
-        });
-      });
-    });
-    return newData;
-  }
-  console.log(data);
-  // console.log(setNode());
   return (
     <>
       {!isLoading ? (
@@ -57,111 +39,118 @@ function App() {
               <TableCell>Verdi</TableCell>
             </TableHead>
             <TableBody>
-              {data[0].data.map((row) => {
-                return (
-                  <>
-                    <TableRow
-                      key={row.selectionId}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                      }}
-                    >
-                      <TableCell rowSpan={row.nodes.length + 1}>
-                        <div className="flex justify-between">
-                          <h5>{row.name}</h5>
-                          <MoreVertIcon />
-                          <Popover
-                            anchorOrigin={{
-                              vertical: "bottom",
-                              horizontal: "left",
-                            }}
-                          >
-                            <p>Test</p>
-                          </Popover>
-                        </div>
-                        <div className="flex justify-between my-4">
-                          <p>{row.distributionKey?.name}</p>
-                          <div>
-                            <CreateIcon />
-                            <DeleteIcon />
+              {data[0].data.map((row, index) => {
+                if (index < 2) {
+                  return (
+                    <>
+                      <TableRow
+                        key={row.selectionId}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell rowSpan={row.nodes.length + 1}>
+                          <div className="flex justify-between">
+                            <h5>{row.name}</h5>
+                            <MoreVertIcon />
+                            <Popover
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                            >
+                              <p>Test</p>
+                            </Popover>
                           </div>
-                        </div>
-                        <div className="flex space-x-4">
-                          <div className="flex items-center space-x-1">
-                            {row.distributionKey ? (
-                              <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                            ) : (
-                              ""
-                            )}
-                            <p>{row.distributionKey?.distributions[0]?.name}</p>
+                          <div className="flex justify-between my-4">
+                            <p>{row.distributionKey?.name}</p>
+                            <div>
+                              <CreateIcon />
+                              <DeleteIcon />
+                            </div>
                           </div>
-                          <div>
-                            {row.distributionKey?.distributions[0]?.percentage}
-                            {row.distributionKey ? "%" : ""}
-                          </div>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                    {row?.nodes?.map((el) => {
-                      return (
-                        <>
-                          <TableRow>
-                            <TableCell>{el.value}</TableCell>
-                            <TableCell>{el.secondColumn}</TableCell>
-                            {el?.nodes?.map((el1, index) => {
-                              console.log(
-                                "index == ",
-                                index,
-                                "value == ",
-                                el1.value
-                              );
-                              if (index !== 1) {
-                                return (
-                                  <>
-                                    <TableCell>{el1.value}</TableCell>
-                                    <TableCell>{el1.secondColumn}</TableCell>
-                                    {el1.nodes.length !== 2 ? (
-                                      el1.nodes.map((el2) => {
-                                        return (
-                                          <>
-                                            <TableCell>{el2.value}</TableCell>
-                                            {el2.nodes.length !== 2 ? (
-                                              el2.nodes.map((el3) => {
-                                                return (
-                                                  <>
-                                                    <TableCell>
-                                                      {el3.value}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                      {el.calculatedValue}
-                                                    </TableCell>
-                                                  </>
-                                                );
-                                              })
-                                            ) : (
-                                              <>
-                                                <TableCell></TableCell>
-                                                <TableCell>
-                                                  {el.calculatedValue}
-                                                </TableCell>
-                                              </>
-                                            )}
-                                          </>
-                                        );
-                                      })
-                                    ) : (
-                                      <TableCell></TableCell>
-                                    )}
-                                  </>
-                                );
+                          <div className="flex space-x-4">
+                            <div className="flex items-center space-x-1">
+                              {row.distributionKey ? (
+                                <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                              ) : (
+                                ""
+                              )}
+                              <p>
+                                {row.distributionKey?.distributions[0]?.name}
+                              </p>
+                            </div>
+                            <div>
+                              {
+                                row.distributionKey?.distributions[0]
+                                  ?.percentage
                               }
-                            })}
-                          </TableRow>
-                        </>
-                      );
-                    })}
-                  </>
-                );
+                              {row.distributionKey ? "%" : ""}
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                      {row?.nodes?.map((el) => {
+                        return (
+                          <>
+                            <TableRow>
+                              <TableCell>{el.value}</TableCell>
+                              <TableCell>{el.secondColumn}</TableCell>
+                              {el?.nodes?.map((el1, index) => {
+                                console.log(
+                                  "index == ",
+                                  index,
+                                  "value == ",
+                                  el1.value
+                                );
+                                if (index !== 1) {
+                                  return (
+                                    <>
+                                      <TableCell>{el1.value}</TableCell>
+                                      <TableCell>{el1.secondColumn}</TableCell>
+                                      {el1.nodes.length !== 2 ? (
+                                        el1.nodes.map((el2) => {
+                                          return (
+                                            <>
+                                              <TableCell>{el2.value}</TableCell>
+                                              {el2.nodes.length !== 2 ? (
+                                                el2.nodes.map((el3) => {
+                                                  return (
+                                                    <>
+                                                      <TableCell>
+                                                        {el3.value}
+                                                      </TableCell>
+                                                      <TableCell>
+                                                        {el.calculatedValue}
+                                                      </TableCell>
+                                                    </>
+                                                  );
+                                                })
+                                              ) : (
+                                                <>
+                                                  <TableCell></TableCell>
+                                                  <TableCell>
+                                                    {el.calculatedValue}
+                                                  </TableCell>
+                                                </>
+                                              )}
+                                            </>
+                                          );
+                                        })
+                                      ) : (
+                                        <TableCell></TableCell>
+                                      )}
+                                    </>
+                                  );
+                                }
+                              })}
+                            </TableRow>
+                          </>
+                        );
+                      })}
+                    </>
+                  );
+                }
               })}
             </TableBody>
           </Table>
